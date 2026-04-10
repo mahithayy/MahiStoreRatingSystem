@@ -72,10 +72,14 @@ const AdminStores = () => {
       setFormData({ name: '', email: '', address: '', ownerId: '' });
       fetchStores();
     } catch (err) {
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || '';
       if (err.response?.data?.details) {
         setModalError(err.response.data.details[0].message);
+      } else if (errorMsg.includes('Unique constraint failed')) {
+        // Friendly error just in case!
+        setModalError('This owner already has a store assigned to them! Please choose someone else.');
       } else {
-        setModalError(err.response?.data?.message || err.response?.data?.error || 'Failed to add store.');
+        setModalError(errorMsg || 'Failed to add store.');
       }
     } finally {
       setIsAdding(false);
