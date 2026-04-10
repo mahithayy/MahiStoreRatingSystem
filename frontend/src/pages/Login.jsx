@@ -47,7 +47,9 @@ const Login = () => {
             <Store size={32} />
           </div>
           <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
-          <p className="text-gray-500">Sign in to the Store Rating System</p>
+          <p className="text-gray-500">
+            Sign in to <span className="font-bold text-gray-700">Mahitha's Store Rating System</span>
+          </p>
         </div>
 
         {/* Error Message Display */}
