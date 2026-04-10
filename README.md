@@ -10,8 +10,8 @@ A robust, role-based store rating platform built with React, Express, PostgreSQL
 
 ##  Key Features
 * **Role-Based Access Control:** Three distinct user types (`ADMIN`, `STORE_OWNER`, `USER`) with secure protected routes.(All users can update password by clicking on "Profile" button in Navbar)
-* **Strict Validation:** Enforced Zod validation for user creation (names 20-60 chars, strict password policies).
-* **Interactive Dashboards:** * Admins can view platform stats, filter users, sort tables, and dynamically assign stores.
+* **Strict Validation & Smart UI:** Enforced robust backend Zod validation (20-60 character names, strict password regex) alongside database-level unique constraints for user emails and store owners. The frontend features human-readable error translations and logical profile checks (such as preventing users from reusing their current password).
+ * **Interactive Dashboards:** * Admins can view platform stats, filter users, sort tables, and dynamically assign stores.
   * Store Owners get real-time analytics on their average ratings and recent reviews.
 * **Upsert Ratings:** Users can seamlessly submit or update their ratings (1-5 stars) for any store.
 
