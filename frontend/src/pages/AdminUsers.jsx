@@ -61,11 +61,20 @@ const AdminUsers = () => {
       setFormData({ name: '', email: '', password: '', address: '', role: 'USER' }); // reset
       fetchUsers(); // Refresh the table
     } catch (err) {
-      if (err.response?.data?.details) {
-        setModalError(err.response.data.details[0].message);
-      } else {
-        setModalError(err.response?.data?.message || err.response?.data?.error || 'Failed to add user.');
+      let errorMsg = err.response?.data?.details
+        ? err.response.data.details[0].message
+        : (err.response?.data?.message || err.response?.data?.error || 'Failed to add user.');
+
+      // Friendly Error Translations
+      if (errorMsg.includes('Unique constraint failed') && errorMsg.includes('email')) {
+        errorMsg = 'A user with this email already exists.';
+      } else if (errorMsg.includes('/[A-Z]/')) {
+        errorMsg = 'Password must contain at least one uppercase letter.';
+      } else if (errorMsg.includes('/[^A-Za-z0-9]/')) {
+        errorMsg = 'Password must contain at least one special character (e.g., !@#$%).';
       }
+
+      setModalError(errorMsg);
     } finally {
       setIsAdding(false);
     }

@@ -44,13 +44,21 @@ const Signup = () => {
       navigate('/stores');
 
     } catch (err) {
-      // If  backend Zod validation fails, it sends an array of details
-      if (err.response?.data?.details) {
-        // Grab the first validation error to show the user
-        setError(err.response.data.details[0].message);
-      } else {
-        setError(err.response?.data?.message || err.response?.data?.error || 'Registration failed.');
+      // 1. Grab the raw error from the backend
+      let errorMsg = err.response?.data?.details
+        ? err.response.data.details[0].message
+        : (err.response?.data?.message || err.response?.data?.error || 'Registration failed.');
+
+      // 2. Translate ugly backend errors into friendly UI messages!
+      if (errorMsg.includes('Unique constraint failed') && errorMsg.includes('email')) {
+        errorMsg = 'This email is already registered. Please sign in instead.';
+      } else if (errorMsg.includes('/[A-Z]/')) {
+        errorMsg = 'Password must contain at least one uppercase letter.';
+      } else if (errorMsg.includes('/[^A-Za-z0-9]/')) {
+        errorMsg = 'Password must contain at least one special character (e.g., !@#$%).';
       }
+
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }
