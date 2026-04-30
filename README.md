@@ -17,6 +17,8 @@ A robust, role-based store rating platform built with React, Express, PostgreSQL
 
 ##  Local Setup Instructions
 For using the deployed versions, no setup needed. They're fully functional on their own.
+What you need to test admin dashboard: Admin email: admin@mahitha.com and Admin password: StoreOwner!
+Enter these credentials to login as admin.
 ### Prerequisites
 * Node.js (v18+)
 * PostgreSQL (Local or Cloud like Neon/Supabase)
