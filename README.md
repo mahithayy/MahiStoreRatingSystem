@@ -37,7 +37,9 @@ Enter these credentials to login as admin.
 4. Run `npm run dev` to start the Vite development server.
 
 ##  Default Admin Access
-To access the Admin dashboard on a fresh database installation:
-1. Register a new account via the frontend signup page.
-2. Run the following SQL command in your database to elevate permissions:
-   `UPDATE "User" SET role = 'ADMIN' WHERE email = 'your_email@example.com';
+## Default Admin Access
+For the live deployed version, you can log in immediately using these credentials:
+* **Email:** admin@mahitha.com
+* **Password:** SuperSecret1!
+
+If you are running the project locally, the database will automatically be seeded with this Admin account when you run `npx prisma db push`. If you need to trigger it manually, simply run `npm run seed` in the backend directory.
