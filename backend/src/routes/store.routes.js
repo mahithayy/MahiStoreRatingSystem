@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getStoreRatings, replyTorating } = require("../controllers/store.controller");
+const { getStoreRatings, replyToRating } = require("../controllers/store.controller");
 
 const { verifyToken } = require("../middleware/auth.middleware");
 const { authorizeRoles } = require("../middleware/role.middleware");
