@@ -127,7 +127,11 @@ const handleDelete = async (id) => {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Manage Stores</h1>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            setIsEditing(false);
+            setFormData({ name: '', email: '', address: '', ownerId: '' });
+            setShowModal(true);
+          }}
           className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
         >
           <Plus size={20} className="mr-2" /> Add New Store
@@ -212,7 +216,7 @@ const handleDelete = async (id) => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
             <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-xl font-bold">Add New Store</h2>
+              <h2 className="text-xl font-bold">{isEditing ? 'Edit Store' : 'Add New Store'}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
             </div>
 
@@ -247,7 +251,7 @@ const handleDelete = async (id) => {
               <div className="pt-4 flex justify-end space-x-3">
                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
                 <button type="submit" disabled={isAdding || availableOwners.length === 0} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
-                  {isAdding ? <Loader2 className="animate-spin mr-2" size={18} /> : 'Save Store'}
+                  {isAdding ? <Loader2 className="animate-spin mr-2" size={18} /> : isEditing ? 'Update Store' : 'Save Store'}
                 </button>
               </div>
             </form>

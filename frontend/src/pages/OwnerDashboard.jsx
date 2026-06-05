@@ -6,7 +6,21 @@ const OwnerDashboard = () => {
   const [storeData, setStoreData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+const [replyingId, setReplyingId] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const handleReplySubmit = async (ratingId) => {
+    try {
+      await api.put(`/store/ratings/${ratingId}/reply`, { comment: replyText });
+      setReplyingId(null);
+      setReplyText('');
 
+      // Refresh the data to show the new comment!
+      const response = await api.get('/store');
+      setStoreData(response.data);
+    } catch (err) {
+      alert("Failed to submit reply.");
+    }
+  };
   useEffect(() => {
     const fetchStoreData = async () => {
       try {
@@ -97,6 +111,7 @@ const OwnerDashboard = () => {
                 <th className="p-4">Customer Name</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Rating Given</th>
+                <th className="p-4">Your Reply</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -111,6 +126,40 @@ const OwnerDashboard = () => {
                       <span className="flex items-center font-bold text-gray-800 bg-gray-50 border border-gray-200 px-3 py-1 rounded-lg w-max">
                         {review.rating} <Star size={16} className="ml-1 text-yellow-500 fill-yellow-500" />
                       </span>
+                    </td>
+                    <td className="p-4">
+                      {review.comment && replyingId !== review.id ? (
+                        <div>
+                          <p className="text-sm text-gray-700 italic border-l-2 border-orange-400 pl-2">"{review.comment}"</p>
+                          <button
+                            onClick={() => { setReplyingId(review.id); setReplyText(review.comment); }}
+                            className="text-xs font-semibold text-blue-600 mt-2 hover:underline"
+                          >
+                            Edit Reply
+                          </button>
+                        </div>
+                      ) : replyingId === review.id ? (
+                        <div className="flex flex-col space-y-2 max-w-xs">
+                          <textarea
+                            value={replyText}
+                            onChange={e => setReplyText(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-orange-200 focus:outline-none"
+                            rows="2"
+                            placeholder="Thank the customer..."
+                          />
+                          <div className="flex space-x-2">
+                            <button onClick={() => handleReplySubmit(review.id)} className="bg-orange-600 text-white text-xs px-3 py-1.5 rounded hover:bg-orange-700 transition">Save</button>
+                            <button onClick={() => setReplyingId(null)} className="text-gray-500 bg-gray-100 hover:bg-gray-200 text-xs px-3 py-1.5 rounded transition">Cancel</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => { setReplyingId(review.id); setReplyText(''); }}
+                          className="text-sm font-semibold text-orange-600 hover:underline"
+                        >
+                          Add a Reply
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
