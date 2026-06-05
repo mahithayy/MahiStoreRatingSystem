@@ -5,7 +5,12 @@ const { registerSchema , changePasswordSchema} = require("../utils/validation");
 
 //const prisma = new PrismaClient();
 const prisma = require("../utils/prisma");
-
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 24 * 60 * 60 * 1000 // 1 day
+});
 exports.register = async (req, res) => {
   try {
     const data = registerSchema.parse(req.body);
@@ -40,9 +45,19 @@ exports.login = async (req, res) => {
 
   const token = generateToken(user);
 
-  res.json({ token, role: user.role });
-};
+  // Attach token to the cookie
+  res.cookie("token", token, getCookieOptions());
 
+
+  res.json({ id: user.id, role: user.role });
+};
+exports.logout = async (req, res) => {
+  res.cookie("token", "", {
+    ...getCookieOptions(),
+    maxAge: 0 // Expire immediately
+  });
+  res.json({ message: "Logged out successfully" });
+};
 exports.changePassword = async (req, res) => {
   const { oldPassword, newPassword } = changePasswordSchema.parse(req.body);
   const userId = req.user.id; // Comes from verifyToken middleware

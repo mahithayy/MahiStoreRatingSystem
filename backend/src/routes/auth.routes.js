@@ -5,6 +5,7 @@ const { register, login, changePassword } = require("../controllers/auth.control
 const { verifyToken } = require("../middleware/auth.middleware");
 router.post("/register", register);
 router.post("/login", login);
+router.post("/logout", logout);
 router.post("/change-password", verifyToken, changePassword);
 
 module.exports = router;
