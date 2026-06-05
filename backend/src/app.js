@@ -11,7 +11,7 @@ const app = express();
 app.use(helmet());
 const allowedOrigins = [
   "http://localhost:5173", // Allow local Vite testing
-  "https://your-vercel-domain.vercel.app" // REPLACE with your actual Vercel URL
+  "https://mahi-store-rating-system.vercel.app/" // REPLACE with your actual Vercel URL
 ];
 app.use(cors({
   origin: function (origin, callback) {
