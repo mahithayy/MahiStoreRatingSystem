@@ -38,7 +38,7 @@ const Signup = () => {
       });
 
       // 3. Save token to context
-      login(loginResponse.data.token, loginResponse.data.role);
+      login({ id: loginResponse.data.id, role: loginResponse.data.role });
 
       // 4. Redirect to the user dashboard
       navigate('/stores');

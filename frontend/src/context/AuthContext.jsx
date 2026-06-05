@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import api from '../services/api';
+//import { jwtDecode } from 'jwt-decode';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
@@ -7,29 +8,24 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   // Notice there is NO useEffect here! Just useState.
   const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        return { id: decoded.id, role: decoded.role };
-      } catch {
-        console.error("Invalid token");
-        localStorage.removeItem('token');
-        return null;
-      }
-    }
-    return null;
+    const savedUser = localStorage.getItem('userState');
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const login = (token, role) => {
-    localStorage.setItem('token', token);
-    const decoded = jwtDecode(token);
-    setUser({ id: decoded.id, role: role });
+  const login = (userData) => {
+    localStorage.setItem('userState', JSON.stringify(userData));
+    setUser(userData);
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout'); // Tell backend to destroy the cookie
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      localStorage.removeItem('userState');
+      setUser(null);
+    }
   };
 
   return (

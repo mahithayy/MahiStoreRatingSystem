@@ -23,7 +23,7 @@ const Login = () => {
       const response = await api.post('/auth/login', { email, password });
 
       // Save token and state via Context
-      login(response.data.token, response.data.role);
+      login({ id: response.data.id, role: response.data.role });
 
       // Redirect based on the user's role
       if (response.data.role === 'ADMIN') navigate('/admin');
