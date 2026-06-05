@@ -6,7 +6,11 @@ const {
   createStore,
   getDashboard,
   getUsers,
-  getStores
+  getStores,
+  updateUser,
+  deleteUser,
+  updateStore,
+  deleteStore
 } = require("../controllers/admin.controller");
 
 const { verifyToken } = require("../middleware/auth.middleware");
@@ -17,5 +21,9 @@ router.post("/stores", verifyToken, authorizeRoles("ADMIN"), createStore);
 router.get("/dashboard", verifyToken, authorizeRoles("ADMIN"), getDashboard);
 router.get("/users", verifyToken, authorizeRoles("ADMIN"), getUsers);
 router.get("/stores", verifyToken, authorizeRoles("ADMIN"), getStores);
+router.put("/users/:id", verifyToken, authorizeRoles("ADMIN"), updateUser);
+router.delete("/users/:id", verifyToken, authorizeRoles("ADMIN"), deleteUser);
+router.put("/stores/:id", verifyToken, authorizeRoles("ADMIN"), updateStore);
+router.delete("/stores/:id", verifyToken, authorizeRoles("ADMIN"), deleteStore);
 
 module.exports = router;

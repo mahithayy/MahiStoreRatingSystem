@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, ArrowUpDown, X, Loader2, Store } from 'lucide-react';
+import { Search, Plus, ArrowUpDown, X, Loader2, Store, Edit,Trash2 } from 'lucide-react';
 import api from '../services/api';
 
 const AdminStores = () => {
@@ -14,6 +14,7 @@ const AdminStores = () => {
   // Modal & Owner Selection State
   const [showModal, setShowModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [modalError, setModalError] = useState('');
   const [availableOwners, setAvailableOwners] = useState([]);
 
@@ -61,25 +62,53 @@ const AdminStores = () => {
     setSortBy(field);
     setOrder(newOrder);
   };
+const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this store? This will also delete all of its ratings.")) {
+      try {
+        await api.delete(`/admin/stores/${id}`);
+        fetchStores();
+      } catch (err) {
+        alert("Failed to delete store.");
+      }
+    }
+  };
 
+  const handleEditClick = (store) => {
+    setFormData({
+      id: store.id,
+      name: store.name,
+      email: store.email,
+      address: store.address,
+      ownerId: store.ownerId || '' // Safely grab existing owner
+    });
+    setIsEditing(true);
+    setShowModal(true);
+  };
   const handleAddStore = async (e) => {
     e.preventDefault();
     setModalError('');
     setIsAdding(true);
     try {
-      await api.post('/admin/stores', formData);
+      if (isEditing) {
+        // Send PUT request if editing
+        await api.put(`/admin/stores/${formData.id}`, formData);
+      } else {
+        // Send POST request if creating
+        await api.post('/admin/stores', formData);
+      }
+
       setShowModal(false);
-      setFormData({ name: '', email: '', address: '', ownerId: '' });
+      setFormData({ name: '', email: '', address: '', ownerId: '' }); // reset
+      setIsEditing(false); // reset edit mode
       fetchStores();
     } catch (err) {
       const errorMsg = err.response?.data?.error || err.response?.data?.message || '';
       if (err.response?.data?.details) {
         setModalError(err.response.data.details[0].message);
       } else if (errorMsg.includes('Unique constraint failed')) {
-        // Friendly error just in case!
         setModalError('This owner already has a store assigned to them! Please choose someone else.');
       } else {
-        setModalError(errorMsg || 'Failed to add store.');
+        setModalError(errorMsg || 'Failed to save store.');
       }
     } finally {
       setIsAdding(false);
@@ -135,6 +164,7 @@ const AdminStores = () => {
                   <div className="flex items-center">Address <ArrowUpDown size={14} className="ml-1" /></div>
                 </th>
                 <th className="p-4">Avg Rating</th>
+                <th className="p-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -153,6 +183,22 @@ const AdminStores = () => {
                     <td className="p-4 text-gray-500">{store.email}</td>
                     <td className="p-4 text-gray-500 truncate max-w-xs">{store.address}</td>
                     <td className="p-4 font-semibold text-gray-700">{getAvgRating(store.ratings)}</td>
+                    <td className="p-4 flex space-x-3">
+                      <button
+                        onClick={() => handleEditClick(store)}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                        title="Edit"
+                      >
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(store.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                        title="Delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

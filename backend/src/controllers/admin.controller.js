@@ -22,7 +22,32 @@ exports.createUser = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+// Update User
+exports.updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, address, role } = req.body;
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: { name, email, address, role },
+    });
+    const { password, ...userWithoutPassword } = updatedUser;
+    res.json(userWithoutPassword);
+  } catch (err) {
+    res.status(400).json({ error: "Failed to update user. Email might already exist." });
+  }
+};
 
+// Delete User
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.user.delete({ where: { id } });
+    res.json({ message: "User and all related data deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ error: "Failed to delete user." });
+  }
+};
 // Create store
 exports.createStore = async (req, res) => {
   //const { name, email, address, ownerId } = req.body;
@@ -38,7 +63,31 @@ exports.createStore = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+// Update Store
+exports.updateStore = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, address, ownerId } = req.body;
+  try {
+    const updatedStore = await prisma.store.update({
+      where: { id },
+      data: { name, email, address, ownerId },
+    });
+    res.json(updatedStore);
+  } catch (err) {
+    res.status(400).json({ error: "Failed to update store." });
+  }
+};
 
+// Delete Store
+exports.deleteStore = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.store.delete({ where: { id } });
+    res.json({ message: "Store and all its ratings deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ error: "Failed to delete store." });
+  }
+};
 // Dashboard stats
 exports.getDashboard = async (req, res) => {
   const users = await prisma.user.count();

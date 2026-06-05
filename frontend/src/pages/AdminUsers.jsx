@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, Filter, ArrowUpDown, X, Loader2 } from 'lucide-react';
+import { Search, Plus, Filter, ArrowUpDown, X, Loader2, Edit, Trash2} from 'lucide-react';
 import api from '../services/api';
 
 const AdminUsers = () => {
@@ -15,6 +15,7 @@ const AdminUsers = () => {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [modalError, setModalError] = useState('');
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', address: '', role: 'USER'
@@ -50,20 +51,49 @@ const AdminUsers = () => {
     setSortBy(field);
     setOrder(newOrder);
   };
+const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this user? This will also delete their store and ratings.")) {
+      try {
+        await api.delete(`/admin/users/${id}`);
+        fetchUsers();
+      } catch (err) {
+        alert("Failed to delete user.");
+      }
+    }
+  };
 
+  const handleEditClick = (u) => {
+    setFormData({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      address: u.address,
+      role: u.role
+    });
+    setIsEditing(true);
+    setShowModal(true);
+  };
   const handleAddUser = async (e) => {
     e.preventDefault();
     setModalError('');
     setIsAdding(true);
     try {
-      await api.post('/admin/users', formData);
+      if (isEditing) {
+        // If we are editing, send a PUT request to the specific user ID
+        await api.put(`/admin/users/${formData.id}`, formData);
+      } else {
+        // If we are adding, send a POST request
+        await api.post('/admin/users', formData);
+      }
+
       setShowModal(false);
       setFormData({ name: '', email: '', password: '', address: '', role: 'USER' }); // reset
+      setIsEditing(false); // Reset the edit state
       fetchUsers(); // Refresh the table
     } catch (err) {
       let errorMsg = err.response?.data?.details
         ? err.response.data.details[0].message
-        : (err.response?.data?.message || err.response?.data?.error || 'Failed to add user.');
+        : (err.response?.data?.message || err.response?.data?.error || 'Failed to save user.');
 
       // Friendly Error Translations
       if (errorMsg.includes('Unique constraint failed') && errorMsg.includes('email')) {
@@ -79,7 +109,29 @@ const AdminUsers = () => {
       setIsAdding(false);
     }
   };
+// const handleDelete = async (id) => {
+//   if (window.confirm("Are you sure you want to delete this user? This will also delete their store and ratings.")) {
+//     try {
+//       await api.delete(`/admin/users/${id}`);
+//       fetchUsers(); // Refresh table
+//     } catch (err) {
+//       alert("Failed to delete user.");
+//     }
+//   }
+// };
 
+
+// const handleEditClick = (user) => {
+//   setFormData({
+//     id: user.id, // Store the ID so we know we are editing
+//     name: user.name,
+//     email: user.email,
+//     address: user.address,
+//     role: user.role
+//   });
+//   setIsEditing(true);
+//   setShowModal(true);
+// };
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -135,13 +187,14 @@ const AdminUsers = () => {
                 </th>
                 <th className="p-4">Role</th>
                 <th className="p-4">Address</th>
+                <th className="p-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading ? (
-                <tr><td colSpan="4" className="text-center p-8"><Loader2 className="animate-spin mx-auto text-blue-600" size={32} /></td></tr>
+                <tr><td colSpan="5" className="text-center p-8"><Loader2 className="animate-spin mx-auto text-blue-600" size={32} /></td></tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan="4" className="text-center p-8 text-gray-500">No users found.</td></tr>
+                <tr><td colSpan="5" className="text-center p-8 text-gray-500">No users found.</td></tr>
               ) : (
                 users.map(u => (
                   <tr key={u.id} className="hover:bg-gray-50 transition">
@@ -157,6 +210,24 @@ const AdminUsers = () => {
                       </span>
                     </td>
                     <td className="p-4 text-gray-500 truncate max-w-xs">{u.address}</td>
+
+                    {/* NEW ACTIONS COLUMN - Note the use of 'u' here! */}
+                    <td className="p-4 flex space-x-3">
+                      <button
+                        onClick={() => handleEditClick(u)}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                        title="Edit"
+                      >
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(u.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                        title="Delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -185,10 +256,11 @@ const AdminUsers = () => {
                 <label className="block text-sm font-medium mb-1">Email</label>
                 <input required type="email" className="w-full border rounded-lg px-3 py-2" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}/>
               </div>
+              {!isEditing && (
               <div>
                 <label className="block text-sm font-medium mb-1">Password</label>
                 <input required minLength={8} maxLength={16} type="password" className="w-full border rounded-lg px-3 py-2" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} placeholder="8-16 chars, 1 Uppercase, 1 Special"/>
-              </div>
+              </div>)}
               <div>
                 <label className="block text-sm font-medium mb-1">Address</label>
                 <input required maxLength={400} type="text" className="w-full border rounded-lg px-3 py-2" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})}/>
