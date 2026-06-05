@@ -116,12 +116,26 @@ exports.getUsers = async (req, res) => {
   const users = await prisma.user.findMany({
     where,
     orderBy: { [sortBy]: order },
+    include: {
+      store: {
+        include: { ratings: true }
+      }
+    }
   });
 
   // Strip passwords before sending to the admin frontend
   const cleanUsers = users.map(user => {
     const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+    let avgStoreRating = null;
+    if (store && store.ratings.length > 0) {
+      const sum = store.ratings.reduce((acc, r) => acc + r.rating, 0);
+      avgStoreRating = (sum / store.ratings.length).toFixed(1);
+    }
+
+    return {
+      ...userWithoutPassword,
+      avgStoreRating // Send this new field to the frontend
+    };
   });
 
   res.json(cleanUsers);

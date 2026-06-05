@@ -14,7 +14,7 @@ A robust, role-based store rating platform built with React, Express, PostgreSQL
  * **Interactive Dashboards:** * Admins can view platform stats, filter users, sort tables, and dynamically assign stores.
   * Store Owners get real-time analytics on their average ratings and recent reviews.
 * **Upsert Ratings:** Users can seamlessly submit or update their ratings (1-5 stars) for any store.
-
+**Enterprise-Grade Security**: Replaced standard localStorage with strict httpOnly cookies for JWT management to prevent XSS attacks. Implemented helmet for secure HTTP headers and express-rate-limit to protect authentication endpoints against brute-force attacks.
 ##  Local Setup Instructions
 For using the deployed versions, no setup needed. They're fully functional on their own.
 What you need to test admin dashboard: Admin email: admin@mahitha.com and Admin password: SuperSecret1!
@@ -36,7 +36,7 @@ Enter these credentials to login as admin.
 3. Create a `.env` file and add `VITE_API_BASE_URL=http://localhost:3001/api`
 4. Run `npm run dev` to start the Vite development server.
 
-##  Default Admin Access
+
 ## Default Admin Access
 For the live deployed version, you can log in immediately using these credentials:
 * **Email:** admin@mahitha.com

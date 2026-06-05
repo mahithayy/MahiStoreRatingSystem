@@ -190,6 +190,7 @@ const handleDelete = async (id) => {
                 </th>
                 <th className="p-4">Role</th>
                 <th className="p-4">Address</th>
+                <th className="p-4">Store Rating</th>
                 <th className="p-4">Actions</th>
               </tr>
             </thead>
@@ -213,8 +214,12 @@ const handleDelete = async (id) => {
                       </span>
                     </td>
                     <td className="p-4 text-gray-500 truncate max-w-xs">{u.address}</td>
+<td className="p-4 font-medium text-gray-700">
+                      {u.role === 'STORE_OWNER'
+                        ? (u.avgStoreRating ? `${u.avgStoreRating} ⭐` : 'No ratings yet')
+                        : '-'}
+                    </td>
 
-                    {/* NEW ACTIONS COLUMN - Note the use of 'u' here! */}
                     <td className="p-4 flex space-x-3">
                       <button
                         onClick={() => handleEditClick(u)}
