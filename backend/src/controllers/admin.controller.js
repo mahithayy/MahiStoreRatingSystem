@@ -19,6 +19,9 @@ exports.createUser = async (req, res) => {
     const { password, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
   } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({ details: err.errors });
+    }
     res.status(400).json({ error: err.message });
   }
 };
@@ -34,6 +37,9 @@ exports.updateUser = async (req, res) => {
     const { password, ...userWithoutPassword } = updatedUser;
     res.json(userWithoutPassword);
   } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({ details: err.errors });
+    }
     res.status(400).json({ error: "Failed to update user. Email might already exist." });
   }
 };
@@ -60,6 +66,9 @@ exports.createStore = async (req, res) => {
 
     res.json(store);
   } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({ details: err.errors });
+    }
     res.status(400).json({ error: err.message });
   }
 };
@@ -74,7 +83,7 @@ exports.updateStore = async (req, res) => {
     });
     res.json(updatedStore);
   } catch (err) {
-    res.status(400).json({ error: "Failed to update store." });
+    res.status(400).json({ error: err.message });
   }
 };
 

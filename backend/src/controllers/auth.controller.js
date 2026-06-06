@@ -28,6 +28,9 @@ exports.register = async (req, res) => {
     const { password, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
   } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({ details: err.errors });
+    }
     res.status(400).json({ error: err.message });
   }
 };
