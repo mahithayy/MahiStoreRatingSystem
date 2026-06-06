@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link} from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Store, Loader2 } from 'lucide-react'; // Cool icons!
+import { Store, Loader2, Info } from 'lucide-react'; // Cool icons!
 import api from '../services/api';
 
 const Login = () => {
@@ -99,6 +99,32 @@ const Login = () => {
           <Link to="/signup" className="font-semibold text-blue-600 hover:underline">
             Register here
           </Link>
+        </div>
+        <div className="mt-8 pt-6 border-t border-gray-100">
+          <div className="bg-slate-50 rounded-xl p-5 border border-slate-200 shadow-inner">
+            <div className="flex items-center space-x-2 text-slate-700 mb-3">
+              <Info size={18} className="text-blue-500" />
+              <h3 className="font-bold text-sm uppercase tracking-wider">Reviewer Testing Guide</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+              <div className="bg-white p-3 rounded border border-slate-100">
+                <p className="font-semibold text-purple-700 mb-1">Admin Access</p>
+                <p><span className="font-medium">Email:</span> admin@mahitha.com</p>
+                <p><span className="font-medium">Pass:</span> SuperSecret1!</p>
+              </div>
+
+              <div className="bg-white p-3 rounded border border-slate-100">
+                <p className="font-semibold text-orange-600 mb-1">Store Owner Access</p>
+                <p><span className="font-medium">Email:</span> store@owner.com</p>
+                <p><span className="font-medium">Pass:</span> ownerPass!</p>
+              </div>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-500 italic text-center">
+              Tip: You can test the custom password validation rules by clicking the "Profile" button in the Navbar after logging in.
+            </p>
+          </div>
         </div>
       </div>
     </div>
