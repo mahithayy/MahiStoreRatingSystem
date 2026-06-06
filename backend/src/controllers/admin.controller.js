@@ -125,7 +125,7 @@ exports.getUsers = async (req, res) => {
 
   // Strip passwords before sending to the admin frontend
   const cleanUsers = users.map(user => {
-    const { password, ...userWithoutPassword } = user;
+    const { password,store, ...userWithoutPassword } = user;
     let avgStoreRating = null;
     if (store && store.ratings.length > 0) {
       const sum = store.ratings.reduce((acc, r) => acc + r.rating, 0);
