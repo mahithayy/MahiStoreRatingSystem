@@ -34,12 +34,12 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col xl:flex-row items-center justify-center bg-gray-100 p-4 lg:p-8 gap-8">
+    <div className="flex min-h-screen flex-col xl:flex-row items-center justify-center bg-gray-50 p-4 lg:p-8 gap-8">
 
       {/* --- Main Login Card --- */}
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl shrink-0">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg border border-gray-100 shrink-0">
         <div className="mb-8 flex flex-col items-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white mb-4 shadow-lg">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white mb-4 shadow-md">
             <Store size={32} />
           </div>
           <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
@@ -82,7 +82,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex mt-2 items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400 transition-all shadow-md"
+            className="w-full flex mt-2 items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400 transition-all shadow-sm"
           >
             {isLoading ? <Loader2 className="animate-spin mr-2" size={20} /> : 'Sign In'}
           </button>
@@ -97,21 +97,25 @@ const Login = () => {
       </div>
 
       {/* --- Reviewer Guide Side Panel --- */}
-      <div className="w-full max-w-4xl bg-slate-900 text-slate-300 rounded-2xl shadow-2xl p-6 lg:p-10 border border-slate-700">
+      <div className="w-full max-w-4xl bg-white text-gray-800 rounded-2xl shadow-lg p-6 lg:p-10 border border-gray-100">
         <div className="flex items-center space-x-3 mb-2">
-          <Info size={28} className="text-blue-400" />
-          <h2 className="text-2xl font-bold tracking-wide text-white">Reviewer Testing Guide</h2>
+          <div className="bg-blue-50 p-2 rounded-lg">
+            <Info size={24} className="text-blue-600" />
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight text-gray-800">Reviewer Testing Guide</h2>
         </div>
-        <p className="text-slate-400 mb-8 text-sm">Use the credentials below to explore the role-based features of the application.</p>
+        <p className="text-gray-500 mb-8 text-sm">Use the credentials below to explore the role-based features of the application.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
           {/* Admin Column */}
-          <div className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-inner">
-            <h3 className="text-lg font-bold text-blue-400 mb-3 border-b border-slate-700 pb-2">Admin</h3>
-            <p className="text-sm mb-1"><span className="font-medium text-slate-400">Email:</span> <span className="text-white">admin@mahitha.com</span></p>
-            <p className="text-sm mb-4"><span className="font-medium text-slate-400">Pass:</span> <span className="text-white">SuperSecret1!</span></p>
-            <ul className="text-xs text-slate-400 space-y-1.5 list-disc list-inside">
+          <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
+            <h3 className="text-lg font-bold text-blue-600 mb-3 border-b border-gray-200 pb-2">System Admin</h3>
+            <div className="mb-4 bg-white p-3 rounded border border-gray-100 shadow-sm">
+              <p className="text-sm"><span className="text-gray-400 font-medium">Email:</span> <span className="font-semibold text-gray-700">admin@mahitha.com</span></p>
+              <p className="text-sm"><span className="text-gray-400 font-medium">Pass:</span> <span className="font-semibold text-gray-700">SuperSecret1!</span></p>
+            </div>
+            <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
               <li>View system-wide dashboard</li>
               <li>CRUD operations for Users</li>
               <li>CRUD operations for Stores</li>
@@ -120,11 +124,13 @@ const Login = () => {
           </div>
 
           {/* Store Owner Column */}
-          <div className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-inner">
-            <h3 className="text-lg font-bold text-orange-400 mb-3 border-b border-slate-700 pb-2">Store Owner</h3>
-            <p className="text-sm mb-1"><span className="font-medium text-slate-400">Email:</span> <span className="text-white">store@owner.com</span></p>
-            <p className="text-sm mb-4"><span className="font-medium text-slate-400">Pass:</span> <span className="text-white">ownerPass!</span></p>
-            <ul className="text-xs text-slate-400 space-y-1.5 list-disc list-inside">
+          <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 hover:border-orange-300 transition-colors">
+            <h3 className="text-lg font-bold text-orange-600 mb-3 border-b border-gray-200 pb-2">Store Owner</h3>
+            <div className="mb-4 bg-white p-3 rounded border border-gray-100 shadow-sm">
+              <p className="text-sm"><span className="text-gray-400 font-medium">Email:</span> <span className="font-semibold text-gray-700">store@owner.com</span></p>
+              <p className="text-sm"><span className="text-gray-400 font-medium">Pass:</span> <span className="font-semibold text-gray-700">ownerPass!</span></p>
+            </div>
+            <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
               <li>View specific store statistics</li>
               <li>See live average ratings</li>
               <li>Read reviews from customers</li>
@@ -133,21 +139,33 @@ const Login = () => {
           </div>
 
           {/* Normal User Column */}
-          <div className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-inner relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded-bl-lg">START HERE</div>
-            <h3 className="text-lg font-bold text-green-400 mb-3 border-b border-slate-700 pb-2">Normal User</h3>
-            <p className="text-sm mb-4 text-slate-400 italic">Sign up manually via the "Register here" link to test strict Zod form validation.</p>
-            <ul className="text-xs text-slate-400 space-y-1.5 list-disc list-inside">
+          <div className="bg-blue-50/50 p-5 rounded-xl border border-blue-100 relative overflow-hidden hover:border-green-300 transition-colors">
+            <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-sm">START HERE</div>
+            <h3 className="text-lg font-bold text-green-600 mb-3 border-b border-blue-100 pb-2">Normal User</h3>
+            <p className="text-sm mb-4 text-gray-600 italic bg-white p-3 rounded border border-blue-50 shadow-sm">
+              Sign up manually via the <strong>"Register here"</strong> link to test strict Zod form validation.
+            </p>
+            <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
               <li>Discover and search all stores</li>
               <li>Submit 1-5 star ratings</li>
               <li>Edit or update previous ratings</li>
-              <li>Test account password updates</li>
             </ul>
           </div>
 
         </div>
-      </div>
 
+        {/* --- Highlighted Profile Tip --- */}
+        <div className="mt-8 bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-start space-x-3">
+          <div className="text-indigo-600 mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h4l3-9 5 18 3-9h5"/></svg>
+          </div>
+          <p className="text-sm text-indigo-900 leading-relaxed">
+            <span className="font-bold uppercase tracking-wider text-xs bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded mr-2">Testing Tip</span>
+            Every user role can securely update their credentials. Log in to any account and click the <strong>"Profile"</strong> button in the top navigation bar to test the backend password validation logic.
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 };
