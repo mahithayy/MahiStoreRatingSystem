@@ -34,3 +34,9 @@ exports.changePasswordSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character"),
 });
+exports.adminUpdateUserSchema = z.object({
+  name: z.string().min(20).max(60),
+  email: z.string().email(),
+  address: z.string().max(400),
+  role: z.enum(["ADMIN", "USER", "STORE_OWNER"]),
+});

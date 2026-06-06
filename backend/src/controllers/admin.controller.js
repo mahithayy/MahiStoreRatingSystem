@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 //const prisma = new PrismaClient();
 const prisma = require("../utils/prisma");
 const bcrypt = require("bcryptjs");
-const { adminCreateUserSchema, createStoreSchema } = require("../utils/validation");
+const { adminCreateUserSchema, createStoreSchema, adminUpdateUserSchema } = require("../utils/validation");
 // Add user (ADMIN creates USER or ADMIN or STORE_OWNER)
 exports.createUser = async (req, res) => {
   //const { name, email, password, address, role } = req.body;
@@ -28,12 +28,12 @@ exports.createUser = async (req, res) => {
 // Update User
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, address, role } = req.body;
+  //const { name, email, address, role } = req.body;
   try {
+    const data = adminUpdateUserSchema.parse(req.body);
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: { name, email, address, role },
-    });
+data: { name: data.name, email: data.email, address: data.address, role: data.role },    });
     const { password, ...userWithoutPassword } = updatedUser;
     res.json(userWithoutPassword);
   } catch (err) {
@@ -75,14 +75,18 @@ exports.createStore = async (req, res) => {
 // Update Store
 exports.updateStore = async (req, res) => {
   const { id } = req.params;
-  const { name, email, address, ownerId } = req.body;
+  //const { name, email, address, ownerId } = req.body;
   try {
+    const data = createStoreSchema.parse(req.body);
     const updatedStore = await prisma.store.update({
       where: { id },
-      data: { name, email, address, ownerId },
+      data: { name: data.name, email: data.email, address: data.address, ownerId: data.ownerId },
     });
     res.json(updatedStore);
   } catch (err) {
+    if (err.name === "ZodError") {
+      return res.status(400).json({ details: err.errors });
+    }
     res.status(400).json({ error: err.message });
   }
 };
