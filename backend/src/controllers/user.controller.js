@@ -4,13 +4,36 @@ const prisma = require("../utils/prisma");
 
 // Get all stores
 exports.getStores = async (req, res) => {
+  const userId = req.user.id; // Get the logged-in user's ID
+
   const stores = await prisma.store.findMany({
     include: {
       ratings: true,
     },
   });
 
-  res.json(stores);
+  // Map over the results to aggregate data and strip private user information
+  const safeStores = stores.map((store) => {
+    const totalRatings = store.ratings.length;
+    const avgRating =
+      totalRatings > 0
+        ? store.ratings.reduce((sum, r) => sum + r.rating, 0) / totalRatings
+        : 0;
+
+    // Find if the current user has rated this store
+    const myRatingObj = store.ratings.find((r) => r.userId === userId);
+
+    return {
+      id: store.id,
+      name: store.name,
+      address: store.address,
+      avgRating: parseFloat(avgRating.toFixed(1)),
+      totalRatings,
+      myRating: myRatingObj ? myRatingObj.rating : 0,
+    };
+  });
+
+  res.json(safeStores);
 };
 
 // Submit or update rating

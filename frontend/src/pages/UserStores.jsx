@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, } from 'react';
 import { Search, Store, Star, Loader2 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
 const UserStores = () => {
-  const { user } = useContext(AuthContext);
+  //const { user } = useContext(AuthContext);
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -39,19 +39,7 @@ const UserStores = () => {
     }
   };
 
-  // Helper to calculate the overall average rating for a store
-  const getAvgRating = (ratings) => {
-    if (!ratings || ratings.length === 0) return 0;
-    const sum = ratings.reduce((acc, r) => acc + r.rating, 0);
-    return (sum / ratings.length).toFixed(1);
-  };
 
-  // Helper to find what the currently logged-in user rated this specific store
-  const getMyRating = (ratings) => {
-    if (!ratings) return 0;
-    const myRatingObj = ratings.find(r => r.userId === user.id);
-    return myRatingObj ? myRatingObj.rating : 0;
-  };
 
   // Filter stores based on the search bar
   const filteredStores = stores.filter(store =>
@@ -93,8 +81,8 @@ const UserStores = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStores.map(store => {
-            const avgRating = getAvgRating(store.ratings);
-            const myRating = getMyRating(store.ratings);
+           const avgRating = store.avgRating;
+const myRating = store.myRating;
 
             return (
               <div key={store.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition flex flex-col">
@@ -112,7 +100,7 @@ const UserStores = () => {
                     <span className="flex items-center font-bold text-gray-800 bg-gray-50 px-2 py-1 rounded-lg">
                       {avgRating > 0 ? avgRating : '-'} <Star size={16} className="ml-1 text-yellow-500 fill-yellow-500" />
                     </span>
-                    <span className="text-xs text-gray-400 mt-1">{store.ratings.length} reviews</span>
+                    <span className="text-xs text-gray-400 mt-1">{store.totalRatings} reviews</span>
                   </div>
                 </div>
 
