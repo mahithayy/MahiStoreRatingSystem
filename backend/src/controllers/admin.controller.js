@@ -147,6 +147,7 @@ exports.getUsers = async (req, res) => {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
       { email: { contains: search, mode: "insensitive" } },
+      { address: { contains: search, mode: "insensitive" } },
     ];
   }
 
@@ -191,6 +192,7 @@ exports.getStores = async (req, res) => {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
       { address: { contains: search, mode: "insensitive" } },
+      { email: { contains: search, mode: "insensitive" } },
     ];
   }
 
@@ -199,9 +201,22 @@ exports.getStores = async (req, res) => {
     orderBy: { [sortBy]: order },
     include: {
       owner: { select: { name: true, email: true } },
-      ratings: true,
+      ratings: { select: { rating: true } }, // Fetch only the number to prevent leaking comments/user IDs
     },
   });
 
-  res.json(stores);
+  const safeStores = stores.map((store) => {
+    const totalRatings = store.ratings.length;
+    const avgRating = totalRatings > 0
+      ? (store.ratings.reduce((acc, r) => acc + r.rating, 0) / totalRatings).toFixed(1)
+      : null;
+
+    const { ratings, ...storeData } = store;
+    return {
+      ...storeData,
+      avgRating,
+    };
+  });
+
+  res.json(safeStores);
 };

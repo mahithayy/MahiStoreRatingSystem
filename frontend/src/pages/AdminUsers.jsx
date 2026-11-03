@@ -152,7 +152,7 @@ const handleDelete = async (id) => {
         <form onSubmit={handleSearchSubmit} className="flex w-full md:w-1/2 relative">
           <input
             type="text"
-            placeholder="Search by name or email..."
+            placeholder="Search by name, email, or address..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-200 focus:outline-none"
