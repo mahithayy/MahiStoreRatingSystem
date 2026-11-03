@@ -6,12 +6,17 @@ const prisma = require("../utils/prisma");
 exports.getStoreRatings = async (req, res) => {
   const ownerId = req.user.id;
 
-  const store = await prisma.store.findUnique({
+   const store = await prisma.store.findUnique({
     where: { ownerId },
     include: {
       ratings: {
         include: {
-          user: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+            }
+          },
         },
       },
     },
